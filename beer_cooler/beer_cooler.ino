@@ -2,10 +2,13 @@
 
 //-------------------------------------------------------------------
 //
-// Sous Vide Controller
+// Beer Fermentation Cooler
+// Chris Gilmer
+//
+// Primarily based on Sous Vide Controller
 // Bill Earl - for Adafruit Industries
 //
-// Based on the Arduino PID and PID AutoTune Libraries 
+// In turn Based on the Arduino PID and PID AutoTune Libraries
 // by Brett Beauregard
 //------------------------------------------------------------------
 
