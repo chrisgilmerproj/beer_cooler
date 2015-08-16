@@ -1,5 +1,3 @@
-
-
 //-------------------------------------------------------------------
 //
 // Beer Fermentation Cooler
@@ -35,21 +33,23 @@
 // ************************************************
 
 // I2C
-// I2C Data (SDA) A4
-// I2C Clock (SCL) A5
+// I2C Data (SDA) A4 (yellow)
+// I2C Clock (SCL) A5 (blue)
 
 // One-Wire Temperature Sensor
 // (Use GPIO pins for power/ground to simplify the wiring)
-#define ONE_WIRE_BUS 2
-#define ONE_WIRE_PWR 3
-#define ONE_WIRE_GND 4
-
-// Fan Control
-#define FAN_SENSE    9  // Control Pin 4 from fan
-#define FAN_CONTROL 10  // Sense   Pin 3 from fan
+#define ONE_WIRE_BUS 2  // (yellow)
+#define ONE_WIRE_PWR 3  // (red)
+#define ONE_WIRE_GND 4  // (black)
 
 // Output Relay
-#define RelayPin 7
+#define RELAY_GND    5  // (black)
+#define RELAY_PWR    6  // (red)
+#define RELAY_BUS    7  // (yellow)
+
+// Fan Control
+#define FAN_SENSE    9  // Control Pin 4 from fan (yellow)
+#define FAN_CONTROL 10  // Sense   Pin 3 from fan (blue)
 
 // ************************************************
 // PID Variables and constants
@@ -154,8 +154,14 @@ void setup()
 
    // Initialize Relay Control:
 
-   pinMode(RelayPin, OUTPUT);    // Output mode to drive relay
-   digitalWrite(RelayPin, LOW);  // make sure it is off to start
+   pinMode(RELAY_GND, OUTPUT);
+   digitalWrite(RELAY_GND, LOW);
+
+   pinMode(RELAY_PWR, OUTPUT);
+   digitalWrite(RELAY_PWR, HIGH);
+   
+   pinMode(RELAY_BUS, OUTPUT);    // Output mode to drive relay
+   digitalWrite(RELAY_BUS, LOW);  // make sure it is off to start
 
    // Initialize Fan:
    pinMode(FAN_SENSE, INPUT);
@@ -179,9 +185,9 @@ void setup()
    lcd.createChar(1, degree); // create degree symbol from the binary
    
    lcd.setBacklight(VIOLET);
-   lcd.print(F("    Adafruit"));
+   lcd.print(F("Beer Cooling"));
    lcd.setCursor(0, 1);
-   lcd.print(F("   Sous Vide!"));
+   lcd.print(F("by Chris Gilmer"));
 
    // Start up the DS18B20 One Wire Temperature Sensor
 
@@ -218,7 +224,7 @@ SIGNAL(TIMER2_OVF_vect)
 {
   if (opState == OFF)
   {
-    digitalWrite(RelayPin, LOW);  // make sure relay is off
+    digitalWrite(RELAY_BUS, LOW);  // make sure relay is off
   }
   else
   {
@@ -268,11 +274,12 @@ void Off()
 {
    myPID.SetMode(MANUAL);
    lcd.setBacklight(0);
-   digitalWrite(RelayPin, LOW);  // make sure it is off
-   lcd.print(F("    Adafruit"));
+   digitalWrite(RELAY_BUS, LOW);  // make sure it is off
+   lcd.print(F("Beer Cooling"));
    lcd.setCursor(0, 1);
-   lcd.print(F("   Sous Vide!"));
+   lcd.print(F("by Chris Gilmer"));
    uint8_t buttons = 0;
+
    
    while(!(buttons & (BUTTON_RIGHT)))
    {
@@ -621,11 +628,11 @@ void DriveOutput()
   }
   if((onTime > 100) && (onTime > (now - windowStartTime)))
   {
-     digitalWrite(RelayPin,HIGH);
+     digitalWrite(RELAY_BUS,HIGH);
   }
   else
   {
-     digitalWrite(RelayPin,LOW);
+     digitalWrite(RELAY_BUS,LOW);
   }
 }
 
