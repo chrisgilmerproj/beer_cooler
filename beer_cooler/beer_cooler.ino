@@ -510,7 +510,7 @@ void TuneD()
 }
 
 // ************************************************
-// PID COntrol State
+// PID Control State
 // SHIFT and RIGHT for autotune
 // RIGHT - Setpoint
 // LEFT - OFF
@@ -645,13 +645,21 @@ void setBacklight()
    {
       lcd.setBacklight(VIOLET); // Tuning Mode
    }
-   else if (abs(Input - Setpoint) > 1.0)  
+   else if ((Input - Setpoint) > 1.0)
    {
-      lcd.setBacklight(RED);  // High Alarm - off by more than 1 degree
+      lcd.setBacklight(RED);  // High Alarm - off by more than 1 degree above
    }
-   else if (abs(Input - Setpoint) > 0.2)  
+   else if ((Input - Setpoint) > 0.2)
    {
-      lcd.setBacklight(YELLOW);  // Low Alarm - off by more than 0.2 degrees
+      lcd.setBacklight(YELLOW);  // Low Alarm - off by more than 0.2 degrees above
+   }
+   else if ((Input - Setpoint) < 1.0)
+   {
+      lcd.setBacklight(BLUE);  // High Alarm - off by more than 1 degree below
+   }
+   else if ((Input - Setpoint) < 0.2)
+   {
+      lcd.setBacklight(GREEN);  // Low Alarm - off by more than 0.2 degrees below
    }
    else
    {
@@ -745,7 +753,7 @@ void LoadParameters()
    // Use defaults if EEPROM values are invalid
    if (isnan(Setpoint))
    {
-     Setpoint = 60;
+     Setpoint = 15;
    }
    if (isnan(Kp))
    {
