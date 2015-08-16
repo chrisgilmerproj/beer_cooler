@@ -32,7 +32,7 @@
 // Pin definitions
 // ************************************************
 
-// I2C
+// I2C RGB LCD Display
 // I2C Data (SDA) A4 (yellow)
 // I2C Clock (SCL) A5 (blue)
 
@@ -152,13 +152,14 @@ void setup()
 {
    Serial.begin(9600);
 
-   // Initialize Relay Control:
-
+   // Set up Ground & Power for the sensor from GPIO pins
    pinMode(RELAY_GND, OUTPUT);
    digitalWrite(RELAY_GND, LOW);
 
    pinMode(RELAY_PWR, OUTPUT);
    digitalWrite(RELAY_PWR, HIGH);
+
+   // Initialize Relay Control:
    
    pinMode(RELAY_BUS, OUTPUT);    // Output mode to drive relay
    digitalWrite(RELAY_BUS, LOW);  // make sure it is off to start
@@ -280,7 +281,6 @@ void Off()
    lcd.print(F("by Chris Gilmer"));
    uint8_t buttons = 0;
 
-   
    while(!(buttons & (BUTTON_RIGHT)))
    {
       buttons = ReadButtons();
