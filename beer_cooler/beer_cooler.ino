@@ -52,6 +52,14 @@
 #define FAN_CONTROL 10  // Sense   Pin 3 from fan (blue)
 
 // ************************************************
+// Fan Variables and constants
+// ************************************************
+
+float FAN_LOW = 50.0;
+float FAN_MED = 75.0;
+float FAN_HIGH = 100.0;
+
+// ************************************************
 // PID Variables and constants
 // ************************************************
 
@@ -94,7 +102,7 @@ boolean tuning = false;
 PID_ATune aTune(&Input, &Output);
 
 // ************************************************
-// DiSplay Variables and constants
+// Display Variables and constants
 // ************************************************
 
 Adafruit_RGBLCDShield lcd = Adafruit_RGBLCDShield();
@@ -171,6 +179,7 @@ void setup()
    pinMode(FAN_CONTROL, OUTPUT);
 
    Timer1.initialize(40);  // 40 us = 25 kHz
+   setFanDutyCycle(FAN_LOW);
 
    // Set up Ground & Power for the sensor from GPIO pins
 
@@ -180,7 +189,7 @@ void setup()
    pinMode(ONE_WIRE_PWR, OUTPUT);
    digitalWrite(ONE_WIRE_PWR, HIGH);
 
-   // Initialize LCD DiSplay 
+   // Initialize LCD Display
 
    lcd.begin(16, 2);
    lcd.createChar(1, degree); // create degree symbol from the binary
@@ -629,10 +638,12 @@ void DriveOutput()
   if((onTime > 100) && (onTime > (now - windowStartTime)))
   {
      digitalWrite(RELAY_BUS,HIGH);
+     setFanDutyCycle(FAN_HIGH);
   }
   else
   {
      digitalWrite(RELAY_BUS,LOW);
+     setFanDutyCycle(FAN_LOW);
   }
 }
 
