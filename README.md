@@ -36,3 +36,10 @@ By Adafruit
 
 - https://learn.adafruit.com/sous-vide-powered-by-arduino-the-sous-viduino
 - https://github.com/adafruit/Sous_Viduino
+
+RGB LCD Shield
+---
+
+By Adafruit
+
+- https://learn.adafruit.com/rgb-lcd-shield

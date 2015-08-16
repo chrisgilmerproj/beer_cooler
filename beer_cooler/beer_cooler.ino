@@ -31,14 +31,22 @@
 // Pin definitions
 // ************************************************
 
-// Output Relay
-#define RelayPin 7
+// I2C
+// I2C Data (SDA) A4
+// I2C Clock (SCL) A5
 
 // One-Wire Temperature Sensor
 // (Use GPIO pins for power/ground to simplify the wiring)
 #define ONE_WIRE_BUS 2
 #define ONE_WIRE_PWR 3
 #define ONE_WIRE_GND 4
+
+// Fan Control
+#define FAN_SENSE 5
+#define FAN_CONTROL 11
+
+// Output Relay
+#define RelayPin 7
 
 // ************************************************
 // PID Variables and constants
