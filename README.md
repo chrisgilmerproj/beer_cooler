@@ -25,10 +25,6 @@ By Beefrankly
 
 - http://www.beefrankly.org/blog/2011/12/21/read-out-4-pin-cpu-fan-speed/
 
-Secrets of Arduino by Ken Shirriff
-
-- https://www.arduino.cc/en/Tutorial/SecretsOfArduinoPWM
-
 Sous Viduino
 ---
 
@@ -43,3 +39,15 @@ RGB LCD Shield
 By Adafruit
 
 - https://learn.adafruit.com/rgb-lcd-shield
+
+Timers and Interrupts
+---
+
+Secrets of Arduino by Ken Shirriff
+
+- https://www.arduino.cc/en/Tutorial/SecretsOfArduinoPWM
+
+Timers
+
+- https://arduino-info.wikispaces.com/Timers-Arduino
+- http://www.instructables.com/id/Arduino-Timer-Interrupts/step1/Prescalers-and-the-Compare-Match-Register/

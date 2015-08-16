@@ -16,6 +16,9 @@
 #include <PID_v1.h>
 #include <PID_AutoTune_v0.h>
 
+// TimerOne Library
+#include <TimerOne.h>
+
 // Libraries for the Adafruit RGB/LCD Shield
 #include <Wire.h>
 #include <Adafruit_RGBLCDShield.h>
@@ -42,8 +45,8 @@
 #define ONE_WIRE_GND 4
 
 // Fan Control
-#define FAN_SENSE 5
-#define FAN_CONTROL 11
+#define FAN_SENSE    9  // Control Pin 4 from fan
+#define FAN_CONTROL 10  // Sense   Pin 3 from fan
 
 // Output Relay
 #define RelayPin 7
@@ -96,13 +99,13 @@ PID_ATune aTune(&Input, &Output);
 
 Adafruit_RGBLCDShield lcd = Adafruit_RGBLCDShield();
 // These #defines make it easy to set the backlight color
-#define RED 0x1
+#define RED    0x1
 #define YELLOW 0x3
-#define GREEN 0x2
-#define TEAL 0x6
-#define BLUE 0x4
+#define GREEN  0x2
+#define TEAL   0x6
+#define BLUE   0x4
 #define VIOLET 0x5
-#define WHITE 0x7
+#define WHITE  0x7
 
 #define BUTTON_SHIFT BUTTON_SELECT
 
@@ -154,6 +157,14 @@ void setup()
    pinMode(RelayPin, OUTPUT);    // Output mode to drive relay
    digitalWrite(RelayPin, LOW);  // make sure it is off to start
 
+   // Initialize Fan:
+   pinMode(FAN_SENSE, INPUT);
+   digitalWrite(FAN_SENSE, HIGH);
+
+   pinMode(FAN_CONTROL, OUTPUT);
+
+   Timer1.initialize(40);  // 40 us = 25 kHz
+
    // Set up Ground & Power for the sensor from GPIO pins
 
    pinMode(ONE_WIRE_GND, OUTPUT);
@@ -192,12 +203,12 @@ void setup()
    myPID.SetSampleTime(1000);
    myPID.SetOutputLimits(0, WindowSize);
 
-  // Run timer2 interrupt every 15 ms 
-  TCCR2A = 0;
-  TCCR2B = 1<<CS22 | 1<<CS21 | 1<<CS20;
+   // Run timer2 interrupt every 15 ms
+   TCCR2A = 0;
+   TCCR2B = 1<<CS22 | 1<<CS21 | 1<<CS20;
 
-  //Timer2 Overflow Interrupt Enable
-  TIMSK2 |= 1<<TOIE2;
+   //Timer2 Overflow Interrupt Enable
+   TIMSK2 |= 1<<TOIE2;
 }
 
 // ************************************************
@@ -768,4 +779,39 @@ double EEPROM_readDouble(int address)
       *p++ = EEPROM.read(address++);
    }
    return value;
+}
+
+// ************************************************
+// Set the fan duty cycle to value between 30.0 and 100.0
+// ************************************************
+void setFanDutyCycle(float dutyCycle) {
+  if (dutyCycle < 30.0) {
+    dutyCycle = 30.0;
+  } else if (dutyCycle > 100.0) {
+    dutyCycle = 100.0;
+  }
+  Timer1.pwm(FAN_CONTROL, (dutyCycle / 100) * 1023);
+}
+
+// ************************************************
+//  Get the Revolutions per Minute of the Fan
+// ************************************************
+int getFanRpm() {
+
+  unsigned long duration;
+  unsigned int rpm;
+
+  // Get the time between sensor pulses in microseconds
+  duration = pulseIn(FAN_SENSE, HIGH);
+  duration += pulseIn(FAN_SENSE, LOW);
+
+  // Return 0 if fan is off
+  if (duration == 0) {
+    return 0;
+  } else {
+    // convert one minute of seconds to microseconds
+    // duration represents half of a revolution
+    rpm = (1000000 * 60) / (duration * 2);
+    return rpm;
+  }
 }
