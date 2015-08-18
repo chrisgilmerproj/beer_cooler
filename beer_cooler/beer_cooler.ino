@@ -235,6 +235,7 @@ SIGNAL(TIMER2_OVF_vect)
   if (opState == OFF)
   {
     digitalWrite(RELAY_BUS, LOW);  // make sure relay is off
+    setFanDutyCycle(FAN_LOW);
   }
   else
   {
@@ -285,6 +286,7 @@ void Off()
    myPID.SetMode(MANUAL);
    lcd.setBacklight(0);
    digitalWrite(RELAY_BUS, LOW);  // make sure it is off
+   setFanDutyCycle(FAN_LOW);
    lcd.print(F("Beer Cooling"));
    lcd.setCursor(0, 1);
    lcd.print(F("by Chris Gilmer"));
