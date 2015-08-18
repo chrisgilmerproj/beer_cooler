@@ -81,9 +81,11 @@ const int KpAddress = 8;
 const int KiAddress = 16;
 const int KdAddress = 24;
 
-//Specify the links and initial tuning parameters
+// Specify the links and initial tuning parameters
+// set last parameter DIRECTION to either DIRECT or REVERSE
+//   - DIRECT:  When faced with error head forward (heating)
+//   - REVERSE: When faced with error head backwards (cooling)
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, REVERSE);
-//PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 // 10 second Time Proportional Output window
 int WindowSize = 10000;
