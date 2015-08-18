@@ -55,8 +55,8 @@
 // Fan Variables and constants
 // ************************************************
 
-float FAN_LOW = 50.0;
-float FAN_MED = 75.0;
+float FAN_LOW = 85.0;
+float FAN_MED = 95.0;
 float FAN_HIGH = 100.0;
 
 // ************************************************
@@ -82,10 +82,11 @@ const int KiAddress = 16;
 const int KdAddress = 24;
 
 //Specify the links and initial tuning parameters
-PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
+PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, REVERSE);
+//PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 // 10 second Time Proportional Output window
-int WindowSize = 10000; 
+int WindowSize = 10000;
 unsigned long windowStartTime;
 
 // ************************************************
@@ -590,7 +591,13 @@ void Run()
       {
         Serial.print(Input);
         Serial.print(",");
-        Serial.println(Output);
+        Serial.print(Output);
+        Serial.print(", onTime: ");
+        Serial.print(onTime);
+        Serial.print("; windowStartTime: ");
+        Serial.print(windowStartTime);
+        Serial.print("; now - wST: ");
+        Serial.println(millis() - windowStartTime);
       }
 
       delay(100);
@@ -766,7 +773,7 @@ void LoadParameters()
    // Use defaults if EEPROM values are invalid
    if (isnan(Setpoint))
    {
-     Setpoint = 15;
+     Setpoint = 15; // deg C
    }
    if (isnan(Kp))
    {
