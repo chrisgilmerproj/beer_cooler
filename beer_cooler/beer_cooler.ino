@@ -53,9 +53,10 @@
 // Fan Variables and constants
 // ************************************************
 
-float FAN_LOW = 85.0;
-float FAN_MED = 95.0;
+float FAN_LOW = 75.0;
+float FAN_MED = 90.0;
 float FAN_HIGH = 100.0;
+float FAN_SPEED = 0.0;
 
 // ************************************************
 // PID Variables and constants
@@ -86,7 +87,7 @@ const int KdAddress = 24;
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, REVERSE);
 
 // 10 second Time Proportional Output window
-int WindowSize = 30000;
+int WindowSize = 10000;
 unsigned long windowStartTime;
 
 // ************************************************
@@ -591,6 +592,8 @@ void Run()
         Serial.print(windowStartTime);
         Serial.print("; now - wST: ");
         Serial.println(millis() - windowStartTime);
+        Serial.print("speed: ");
+        Serial.println(FAN_SPEED);
       }
 
       delay(100);
@@ -821,7 +824,8 @@ void setFanDutyCycle(float dutyCycle) {
   } else if (dutyCycle > 100.0) {
     dutyCycle = 100.0;
   }
-  Timer1.pwm(FAN_CONTROL, (dutyCycle / 100) * 1023);
+  FAN_SPEED = (dutyCycle / 100.0) * 1023;
+  Timer1.pwm(FAN_CONTROL, FAN_SPEED);
 }
 
 // ************************************************

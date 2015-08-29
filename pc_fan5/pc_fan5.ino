@@ -21,8 +21,8 @@
 #include <TimerOne.h>
 
 // For Timer1 you need to use pins 10 and 9
-const int SensePin = 9;
-const int ControlPin = 10;
+const int SensePin = 9;     // yellow
+const int ControlPin = 10;  // blue
 
 void setup(void)
 {
@@ -45,6 +45,9 @@ void loop(void)
     Serial.print(dutyCycle);
     setFan(dutyCycle);
     delay(1000); // wait for fan to stabilize
+    if (dutyCycle == 100.0) {
+      delay(5000);
+    }
     Serial.print(", RPM = ");
     Serial.println(getRpm());
   }
@@ -73,7 +76,8 @@ int getRpm() {
   // Get the time between sensor pulses in microseconds
   duration = pulseIn(SensePin, HIGH);
   duration += pulseIn(SensePin, LOW);
-
+  Serial.print("duration: ");
+  Serial.println(duration);
   // Return 0 if fan is off
   if (duration == 0) {
     return 0;
