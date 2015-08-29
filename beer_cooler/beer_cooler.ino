@@ -43,8 +43,6 @@
 #define ONE_WIRE_GND 4  // (black)
 
 // Output Relay
-#define RELAY_GND    5  // (black)
-#define RELAY_PWR    6  // (red)
 #define RELAY_BUS    7  // (yellow)
 
 // Fan Control
@@ -88,7 +86,7 @@ const int KdAddress = 24;
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, REVERSE);
 
 // 10 second Time Proportional Output window
-int WindowSize = 10000;
+int WindowSize = 30000;
 unsigned long windowStartTime;
 
 // ************************************************
@@ -162,13 +160,6 @@ DeviceAddress tempSensor;
 void setup()
 {
    Serial.begin(9600);
-
-   // Set up Ground & Power for the sensor from GPIO pins
-   pinMode(RELAY_GND, OUTPUT);
-   digitalWrite(RELAY_GND, LOW);
-
-   pinMode(RELAY_PWR, OUTPUT);
-   digitalWrite(RELAY_PWR, HIGH);
 
    // Initialize Relay Control:
    
@@ -646,6 +637,9 @@ void DriveOutput()
   { //time to shift the Relay Window
      windowStartTime += WindowSize;
   }
+  // At least 100ms must pass before turning on system
+  // Ensure that proportional output is still greater than
+  // the window or don't turn on.
   if((onTime > 100) && (onTime > (now - windowStartTime)))
   {
      digitalWrite(RELAY_BUS,HIGH);
